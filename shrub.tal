@@ -1,0 +1,31 @@
+( https://youtu.be/5_UCkcb7iGY?si=sy1Z0HLC_u4w9xXR&t=259 )
+
+( Shrub to console — assemble with: uxnasm shrub.tal shrub.rom
+  Run on CLI (text) build: uxncli shrub.rom )
+
+|0100                  ( program entry )
+
+  ;shrub               ( push address of null-terminated shrub string )
+&loop
+  DUP2 LDA             ( read byte at [ptr] )
+  #00 EQU ?&done       ( if 0 → done )
+  DUP2 LDA #18 DEO     ( write byte to Console/write (0x18) )
+  INC2                 ( ptr++ )
+  JMP2 &loop
+&done
+  POP2                 ( drop pointer )
+  BRK
+
+|0200                  ( data page )
+
+@shrub
+"      _-_        " 0a
+"   /~~   ~~\     " 0a
+" /~~         \   " 0a
+"{   \  /\  /  }  " 0a
+" \   (o)(o)  /   " 0a
+"  \    ..   /    " 0a
+"   \  \__/ /     " 0a
+"    '----'       " 0a
+00
+)
