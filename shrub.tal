@@ -1,31 +1,35 @@
-( https://youtu.be/5_UCkcb7iGY?si=sy1Z0HLC_u4w9xXR&t=259 )
+( shrub.tal — prints an ASCII shrub to the Console
+  Notes:
+    - Backslashes are emitted as byte 0x5c to avoid string/lexer issues.
+    - Unique sublabels (&print_next, etc.) to avoid collisions with backends that auto-define &loop. )
 
-( Shrub to console — assemble with: uxnasm shrub.tal shrub.rom
-  Run on CLI (text) build: uxncli shrub.rom )
+|0100
 
-|0100                  ( program entry )
-
-  ;shrub               ( push address of null-terminated shrub string )
-&loop
-  DUP2 LDA             ( read byte at [ptr] )
-  #00 EQU ?&done       ( if 0 → done )
-  DUP2 LDA #18 DEO     ( write byte to Console/write (0x18) )
-  INC2                 ( ptr++ )
-  JMP2 &loop
-&done
-  POP2                 ( drop pointer )
+@on-reset
+  ;shrub         ( push pointer to the string )
+  JSR2 &print_string
   BRK
 
-|0200                  ( data page )
+&print_string    ( ptr -- )
+&print_next
+  DUP2 LDA       ( load current byte )
+  #00 EQU ?&print_done
+  DUP2 LDA #18 DEO  ( Console/write )
+  INC2
+  JMP2 &print_next
+&print_done
+  POP2
+  RTS2
+
+|0200
 
 @shrub
 "      _-_        " 0a
-"   /~~   ~~\     " 0a
-" /~~         \   " 0a
-"{   \  /\  /  }  " 0a
-" \   (o)(o)  /   " 0a
-"  \    ..   /    " 0a
-"   \  \__/ /     " 0a
-"    '----'       " 0a
+"   /~~   ~~" 5c 5c "     " 0a       ( … ~~\\ … )
+" /~~         " 5c 5c "   " 0a       ( … \\ )
+"{   (  )(  )  }  " 0a
+" " 5c "    ..    /   " 0a            ( leading backslash )
+"  " 5c "  .--.  /    " 0a
+"   '------'      " 0a
 00
-)
+
