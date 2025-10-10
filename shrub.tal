@@ -1,35 +1,27 @@
-( shrub.tal — prints an ASCII shrub to the Console
-  Notes:
-    - Backslashes are emitted as byte 0x5c to avoid string/lexer issues.
-    - Unique sublabels (&print_next, etc.) to avoid collisions with backends that auto-define &loop. )
-
 |0100
 
 @on-reset
-  ;shrub         ( push pointer to the string )
-  JSR2 &print_string
-  BRK
-
-&print_string    ( ptr -- )
-&print_next
-  DUP2 LDA       ( load current byte )
-  #00 EQU ?&print_done
-  DUP2 LDA #18 DEO  ( Console/write )
+  ;shrub
+@print_loop
+  DUP2 LDA
+  #00 EQU ?@done
+  DUP2 LDA #18 DEO
   INC2
-  JMP2 &print_next
-&print_done
+  JMP2 @print_loop
+@done
   POP2
-  RTS2
+  BRK
 
 |0200
 
 @shrub
 "      _-_        " 0a
-"   /~~   ~~" 5c 5c "     " 0a       ( … ~~\\ … )
-" /~~         " 5c 5c "   " 0a       ( … \\ )
-"{   (  )(  )  }  " 0a
-" " 5c "    ..    /   " 0a            ( leading backslash )
-"  " 5c "  .--.  /    " 0a
-"   '------'      " 0a
+"    /^^^^^/      " 0a
+"   /  ()  /      " 0a
+"  /   ..  /      " 0a
+" (   ____  )     " 0a
+"  (  ----  )     " 0a
+"   (      )      " 0a
+"    '----'       " 0a
 00
 
