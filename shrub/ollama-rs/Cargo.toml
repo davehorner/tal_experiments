@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = ["ollama-rs", "ollama-rs-macros"]
+
+[workspace.dependencies]
+ollama-rs-macros = { path = "ollama-rs-macros" }
+
+[workspace.package]
+version = "0.3.2"
+
