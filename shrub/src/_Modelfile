@@ -1,0 +1,13 @@
+# Modelfile example for a coding assistant
+# 
+# ollama pull llama3.2
+# ollama list
+
+FROM llama3.2
+
+PARAMETER temperature 0.2
+
+SYSTEM \
+You are a Python coding assistant.
+Your responses should be in Python.
+When asked for a code explanation, provide the explanation first, then the code.
