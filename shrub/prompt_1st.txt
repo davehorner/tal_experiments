@@ -1,0 +1,31 @@
+create me a uxn varvara tal source that has the ascii art of a shrub embedded in it. it should print the shrub to the console when run. here is the example hello world tal file for reference:
+uxntal
+        ( dev/console )
+        |10 @Console [ &pad $8 &char ]
+
+        ( init )
+
+        |0100 ( -> )
+
+            ;hello-world
+
+            &loop
+                ( send ) LDAk .Console/char DEO
+                ( incr ) #0001 ADD2
+                ( loop ) LDAk ,&loop JCN
+            POP2
+
+        BRK
+
+        @hello-world "Hello 20 "World!
+---- 
+# TAL/UXN assembly syntax for strings. 
+## Delimiters
+- open: "
+- close: any byte <= 0x20 ( ASCII space) The content between the delimiters is emitted as raw ASCII bytes.
+To emit a double quote character, use two consecutive quotes followed by a space: "" (emits a single " byte).
+Strings can be placed anywhere tokens are allowed (e.g., after instructions, as data).
+## Examples: - "HELLO → emits bytes for HELLO. - ""HELP" → emits bytes for "HELP". - "" → emits a single " byte.
+No label or macro expansion occurs inside string literals.
+only respond with the source code, nothing else.
+you should modify the source code to include the ascii art of a shrub using uxntal strings and the tool get_unxtal_quoted_string

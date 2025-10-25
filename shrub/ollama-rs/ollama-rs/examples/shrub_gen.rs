@@ -4,8 +4,9 @@ use ollama_rs::{coordinator::Coordinator, generation::chat::ChatMessage, Ollama}
 
 /// Get the CPU temperature in Celsius.
 #[ollama_rs::function]
-async fn get_cpu_temperature() -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
-    Ok("42.7".to_string())
+async fn get_unxtal_quoted_string(string: String) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
+    let quoted = string.replace(' ', " 20 ");
+    Ok(format!("\"{}\"", quoted))
 }
 
 /// Get the available space in bytes for a given path.
@@ -38,14 +39,59 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
     let ollama = Ollama::default();
     let history = vec![];
     let mut coordinator = Coordinator::new(ollama, "llama3.2".to_string(), history)
-        .add_tool(get_cpu_temperature)
+        .add_tool(get_unxtal_quoted_string)
         .add_tool(get_available_space)
         .add_tool(get_weather);
 
     let user_messages = vec![
-        "What's the CPU temperature?",
-        "What's the available space in the root directory?",
-        "What's the weather in Berlin?",
+        r#"
+        create me a uxn varvara tal source that has the ascii 
+        art of a shrub embedded in it. it should print the shrub to the console when run.
+        here is the example hello world tal file for reference:
+        ```uxntal
+        ( dev/console )
+        |10 @Console [ &pad $8 &char ]
+
+        ( init )
+
+        |0100 ( -> )
+
+            ;hello-world
+
+            &loop
+                ( send ) LDAk .Console/char DEO
+                ( incr ) #0001 ADD2
+                ( loop ) LDAk ,&loop JCN
+            POP2
+
+        BRK
+
+        @hello-world "Hello 20 "World!
+        ```
+        ----
+        # TAL/UXN assembly  syntax for strings.
+
+## Delimiters
+
+- open: `"`
+- close: any byte <= 0x20 ( ASCII space)
+
+The content between the delimiters is emitted as raw ASCII bytes.
+
+To emit a double quote character, use two consecutive quotes followed
+by a space: `"" ` (emits a single `"` byte).
+Strings can be placed anywhere tokens are allowed (e.g., after
+instructions, as data).
+
+## Examples:
+
+- `"HELLO ` → emits bytes for `HELLO`.
+- `""HELP" ` → emits bytes for `"HELP"`.
+- `"" ` → emits a single `"` byte.
+
+No label or macro expansion occurs inside string literals.
+        only respond with the source code, nothing else.
+        you should modify the source code to include the ascii art of a shrub using uxntal strings and the tool get_unxtal_quoted_string"#,
     ];
 
     for user_message in user_messages {

@@ -4,7 +4,7 @@ use ollama_rs::{generation::completion::request::GenerationRequest, models::Mode
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ollama = Ollama::default();
     let model = "llama2:latest".to_string();
-    let prompt = "Why is the sky blue?".to_string();
+    let prompt = "create me a uxn varvara tal file that has the ascii art of a shrub embedded in it. it should print the shrub to the console when run.".to_string();
 
     // Fetch the configuration from a file or from user request
     // let options_str = fs::read_to_string("options.json").expect("The option file should be available")    ;

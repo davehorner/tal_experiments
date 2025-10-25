@@ -1,27 +1,27 @@
-|0100
+( dev/console )
+|10 @Console [ &pad $8 &char ]
 
-@on-reset
-  ;shrub
-@print_loop
-  DUP2 LDA
-  #00 EQU ?@done
-  DUP2 LDA #18 DEO
-  INC2
-  JMP2 @print_loop
-@done
-  POP2
-  BRK
+( init )
 
-|0200
+|0100 ( -> )
 
-@shrub
-"      _-_        " 0a
-"    /^^^^^/      " 0a
-"   /  ()  /      " 0a
-"  /   ..  /      " 0a
-" (   ____  )     " 0a
-"  (  ----  )     " 0a
-"   (      )      " 0a
-"    '----'       " 0a
+;shrub-art
+
+&loop
+    ( send ) LDAk .Console/char DEO
+    ( incr ) #0001 ADD2
+    ( loop ) LDAk ,&loop JCN
+POP2
+
+
+BRK
+
+@shrub-art
+20 20 20 20 20 20 "" 0a
+20 20 20 "" 20 "/" 20 20 "\" 20 "" 0a
+20 20 "/" 20 20 "\" "" "/" 20 20 "\" 0a
+20 20 "\" "" "/" 20 20 "\" "" "/" 0a
+20 20 20 20 "/" 20 "/" "\" 20 "\" 0a
+20 20 20 "/" "" "/" 20 20 "\" "" "\" 0a
+20 20 20 20 20 "^" "^" 20 "^" "^" 0a
 00
-
